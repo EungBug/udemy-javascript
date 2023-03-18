@@ -7,7 +7,10 @@
 // 선언과 할당을 함께
 const defaultResult = 0;
 let currentResult = defaultResult;
+// 빈 배열 생성
+let logEntries = [];
 
+// 사용자 입력 값을 가져오는 함수
 function getUserNumberInput() {
   return parseInt(userInput.value);
 }
@@ -18,32 +21,51 @@ function createAndWriteOutput(operator, resultBeforeCalc, calcNumber) {
   outputResult(currentResult, calcDescription);
 }
 
+function writeToLog(operationIndentifier, prevResult, operationNumber, newResult) {
+  // 로그 객체 생성
+  const logEntry = {
+    operation: operationIndentifier,
+    prevResult: prevResult,
+    number: operationNumber,
+    result: newResult,
+  };
+  logEntries.push(logEntry);
+  // 객체 데이터 접근
+  console.log(logEntry.result);
+  console.log(logEntries);
+}
+
 function add() {
   const enteredNumber = getUserNumberInput();
   const initalResult = currentResult;
-  currentResult = currentResult + enteredNumber;
+  // currentResult = currentResult + enteredNumber;
+  currentResult += enteredNumber;
   createAndWriteOutput('+', initalResult, enteredNumber);
+  writeToLog('ADD', initalResult, enteredNumber, currentResult);
 }
 
 function subtract() {
   const enteredNumber = getUserNumberInput();
   const initalResult = currentResult;
-  currentResult = currentResult - enteredNumber;
+  currentResult -= enteredNumber;
   createAndWriteOutput('-', initalResult, enteredNumber);
+  writeToLog('SUBTRACT', initalResult, enteredNumber, currentResult);
 }
 
 function multiply() {
   const enteredNumber = getUserNumberInput();
   const initalResult = currentResult;
-  currentResult = currentResult * enteredNumber;
+  currentResult *= enteredNumber;
   createAndWriteOutput('*', initalResult, enteredNumber);
+  writeToLog('MULTIPLY', initalResult, enteredNumber, currentResult);
 }
 
 function divide() {
   const enteredNumber = getUserNumberInput();
   const initalResult = currentResult;
-  currentResult = currentResult / enteredNumber;
+  currentResult /= enteredNumber;
   createAndWriteOutput('/', initalResult, enteredNumber);
+  writeToLog('DIVIDE', initalResult, enteredNumber, currentResult);
 }
 
 // 각 operator 버튼에 이벤트
