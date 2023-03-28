@@ -30,6 +30,7 @@ const getComputerChoice = function () {
   }
 };
 
+// 화살표 함수로 전환
 const getWinner = (cChoice, pChoice) => {
   return cChoice === pChoice
     ? RESULT_DRAW
@@ -60,4 +61,52 @@ startGameBtn.addEventListener('click', () => {
 
   const winner = getWinner(computerChoice, playerChocie);
   console.log(winner);
+
+  let message = `You picked ${playerChocie}, computer picked ${computerChoice}, therefore you `;
+  if (winner === RESULT_DRAW) {
+    message = message + 'had a draw.';
+  } else if (winner === RESULT_PLAYER_WINS) {
+    message = message + 'won.';
+  } else {
+    message = message + 'lost.';
+  }
+
+  alert(message);
+  gameIsRunning = false;
 });
+
+const showResult = (result, messageText) => {
+  alert(messageText + ' ' + result);
+};
+
+const combine = (resultHandler, operation, ...numbers) => {
+  // 함수 내부에 함수 생성
+  const validateNumber = number => {
+    return isNaN(number) ? 0 : number;
+  };
+
+  let sum = 0;
+  for (const num of numbers) {
+    if (operation === 'ADD') {
+      sum += validateNumber(num);
+    } else {
+      sum -= validateNumber(num);
+    }
+  }
+  // return sum;
+  resultHandler(sum, '합계 :');
+};
+
+const subtractUp = function (resultHandler, ...numbers) {
+  let sum = 0;
+  for (const num of numbers) {
+    sum -= num;
+  }
+  // return sum;
+  resultHandler(sum);
+};
+
+// console.log(sumUp(showResult, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
+// console.log(subtractUp(showResult, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
+combine(showResult.bind(this, '결과 : '), 'ADD', 1, 2, 3, 4, 5);
+console.log(combine(showResult, 'ADD', 1, 2, 3, 4, 5));
