@@ -5,6 +5,7 @@ const cancelAddMovieBtn = addModal.querySelector('.btn--passive');
 const confrimAddMovieBtn = cancelAddMovieBtn.nextElementSibling;
 const userInputs = addModal.querySelectorAll('input');
 const entryTextSection = document.getElementById('entry-text');
+const deleteModal = document.getElementById('delete-modal');
 
 const movies = [];
 
@@ -22,6 +23,26 @@ const deleteMovieHandler = movieId => {
   // 목록 요소에서 제거
   const listRoot = document.getElementById('movie-list');
   listRoot.children[movieIndex].remove();
+  closeMovieDeleteModal();
+};
+
+const closeMovieDeleteModal = () => {
+  toggleBackdrop();
+  deleteModal.classList.remove('visible');
+};
+
+const startDeleteMovieHandler = movieId => {
+  toggleBackdrop();
+  deleteModal.classList.add('visible');
+  const cancelDeletionBtn = deleteModal.querySelector('.btn--passive');
+  let confirmDeletionBtn = deleteModal.querySelector('.btn--danger');
+  // 기존 요소를 복제하여 새로운 참조를 하도록 함
+  confirmDeletionBtn.replaceWith(confirmDeletionBtn.cloneNode(true));
+  confirmDeletionBtn = deleteModal.querySelector('.btn--danger');
+  // 기존에 등록된 리스너 제거
+  cancelDeletionBtn.removeEventListener('click', closeMovieDeleteModal);
+  cancelDeletionBtn.addEventListener('click', closeMovieDeleteModal);
+  confirmDeletionBtn.addEventListener('click', deleteMovieHandler.bind(null, movieId));
 };
 
 const renderNewMovieElement = (id, title, imageUrl, rating) => {
@@ -36,28 +57,35 @@ const renderNewMovieElement = (id, title, imageUrl, rating) => {
         <p>${rating}/5 stars</p>
       </div>
   `;
-  newMovieEl.addEventListener('click', deleteMovieHandler.bind(null, id));
+  newMovieEl.addEventListener('click', startDeleteMovieHandler.bind(null, id));
 
   const listRoot = document.getElementById('movie-list');
   listRoot.append(newMovieEl);
-};
-
-const toggleMovieModal = () => {
-  addModal.classList.toggle('visible');
-  toggleBackdrop();
 };
 
 const toggleBackdrop = () => {
   backdrop.classList.toggle('visible');
 };
 
+const closeMovieModal = () => {
+  addModal.classList.remove('visible');
+};
+
+const showMovieModal = () => {
+  addModal.classList.add('visible');
+  toggleBackdrop();
+};
+
 const backdropClickHandler = () => {
-  toggleMovieModal();
+  closeMovieModal();
+  closeMovieDeleteModal();
+  clearMovieInputs();
 };
 
 const cancelAddMovieClickHandler = () => {
-  toggleMovieModal();
+  closeMovieModal();
   clearMovieInputs();
+  toggleBackdrop();
 };
 
 const clearMovieInputs = () => {
@@ -90,14 +118,14 @@ const addMovieClickHandler = () => {
   };
 
   movies.push(newMovie);
-  console.log(movies);
-  toggleMovieModal();
+  closeMovieModal();
+  toggleBackdrop();
   clearMovieInputs();
   renderNewMovieElement(newMovie.id, newMovie.title, newMovie.image, newMovie.rating);
   updateUI();
 };
 
-startAddMovieBtn.addEventListener('click', toggleMovieModal);
+startAddMovieBtn.addEventListener('click', showMovieModal);
 backdrop.addEventListener('click', backdropClickHandler);
 cancelAddMovieBtn.addEventListener('click', cancelAddMovieClickHandler);
 confrimAddMovieBtn.addEventListener('click', addMovieClickHandler);
