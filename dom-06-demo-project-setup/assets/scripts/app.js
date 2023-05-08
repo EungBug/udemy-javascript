@@ -15,7 +15,16 @@ const updateUI = () => {
   }
 };
 
-const renderNewMovieElement = (title, imageUrl, rating) => {
+const deleteMovieHandler = movieId => {
+  const movieIndex = movies.findIndex(movie => movie.id === movieId);
+  movies.splice(movieIndex, 1);
+
+  // 목록 요소에서 제거
+  const listRoot = document.getElementById('movie-list');
+  listRoot.children[movieIndex].remove();
+};
+
+const renderNewMovieElement = (id, title, imageUrl, rating) => {
   const newMovieEl = document.createElement('li');
   newMovieEl.className = 'movie-element';
   newMovieEl.innerHTML = `
@@ -27,6 +36,8 @@ const renderNewMovieElement = (title, imageUrl, rating) => {
         <p>${rating}/5 stars</p>
       </div>
   `;
+  newMovieEl.addEventListener('click', deleteMovieHandler.bind(null, id));
+
   const listRoot = document.getElementById('movie-list');
   listRoot.append(newMovieEl);
 };
@@ -72,6 +83,7 @@ const addMovieClickHandler = () => {
   }
 
   const newMovie = {
+    id: Math.random().toString(),
     title: titleValue,
     image: imageUrlValue,
     rating: ratingValue
@@ -81,7 +93,7 @@ const addMovieClickHandler = () => {
   console.log(movies);
   toggleMovieModal();
   clearMovieInputs();
-  renderNewMovieElement(newMovie.title, newMovie.image, newMovie.rating);
+  renderNewMovieElement(newMovie.id, newMovie.title, newMovie.image, newMovie.rating);
   updateUI();
 };
 
