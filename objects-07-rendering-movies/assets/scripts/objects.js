@@ -22,10 +22,14 @@ const renderMovies = (filter = '') => {
     // this.info가 undefined를 반환하여 오류 발생
     let { getFormattedTitle } = movie;
     // getFormattedTitle() => 전역 실행 컨텍스트 (여기서 this는 window 객체를 참조한다.)
+    // > bind는 나중에 실행할 함수를 만드는 것
     // getFormattedTitle = getFormattedTitle.bind(movie);
     // let text = getFormattedTitle() + '-';
 
-    let text = movie.getFormattedTitle() + ' - ';
+    // 바로 실행할 함수를 만들거면 call
+    let text = getFormattedTitle.call(movie) + ' - ';
+
+    // let text = movie.getFormattedTitle() + ' - ';
     // For in 반복문을 통해 사용자 지정 Key 프로퍼티에 접근할 수 있다.
     for (const key in info) {
       if (key !== 'title') {
