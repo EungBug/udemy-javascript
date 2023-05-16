@@ -3,7 +3,7 @@ const searchBtn = document.getElementById('search-btn');
 
 const movies = [];
 
-const renderMovies = () => {
+const renderMovies = (filter = '') => {
   const movieList = document.getElementById('movie-list');
 
   if (movies.length === 0) {
@@ -14,13 +14,16 @@ const renderMovies = () => {
   }
   movieList.innerHTML = '';
 
-  movies.forEach(movie => {
+  const filteredMovies = !filter ? movies : movies.filter(movie => movie.info.title.includes(filter));
+  filteredMovies.forEach(movie => {
     const movieEl = document.createElement('li');
-    let text = movie.info.title + ' - ';
+    const { info } = movie;
+    const { title: movieTitle } = info;
+    let text = movieTitle + ' - ';
     // For in 반복문을 통해 사용자 지정 Key 프로퍼티에 접근할 수 있다.
-    for (const key in movie.info) {
+    for (const key in info) {
       if (key !== 'title') {
-        text = text + `${key}: ${movie.info[key]}`;
+        text = text + `${key}: ${info[key]}`;
       }
     }
     movieEl.textContent = text;
@@ -50,4 +53,10 @@ const addMovieHandler = () => {
   renderMovies();
 };
 
+const searchMoviewHandler = () => {
+  const filterTerm = document.getElementById('filter-title').value;
+  renderMovies(filterTerm);
+};
+
 addMovieBtn.addEventListener('click', addMovieHandler);
+searchBtn.addEventListener('click', searchMoviewHandler);
